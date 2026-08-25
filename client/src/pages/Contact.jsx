@@ -29,7 +29,6 @@ function Contact() {
     setErrors(validationErrors);
 
     if (Object.keys(validationErrors).length === 0) {
-      // TODO: wire this to a real backend endpoint (e.g. POST /api/contact) once built
       console.log('Contact form submitted:', form);
       setSubmitted(true);
       setForm({ name: '', email: '', message: '' });
@@ -42,7 +41,7 @@ function Contact() {
         <div className="contact-success">
           <h1>Message sent</h1>
           <p>Thanks for reaching out — we'll get back to you soon.</p>
-          <button onClick={() => setSubmitted(false)}>Send another message</button>
+          <button type ="button" onClick={() => setSubmitted(false)}>Send another message</button>
         </div>
       </div>
     );
