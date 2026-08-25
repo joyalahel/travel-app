@@ -1,0 +1,141 @@
+.admin-page {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+}
+
+.admin-page h1 {
+  font-size: 1.8rem;
+  margin: 0 0 1.5rem;
+  color: #1a1a1a;
+}
+
+.admin-tabs {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+  border-bottom: 1px solid #eee;
+}
+
+.admin-tabs button {
+  background: none;
+  border: none;
+  padding: 0.7rem 1rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #666;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+}
+
+.admin-tabs button.active {
+  color: #8b0000;
+  border-bottom-color: #8b0000;
+}
+
+.admin-section {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: 2rem;
+}
+
+.admin-form {
+  background: #fff;
+  border: 1px solid #eee;
+  border-radius: 10px;
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  height: fit-content;
+}
+
+.admin-form h2 {
+  font-size: 1.05rem;
+  margin: 0 0 0.25rem;
+  color: #1a1a1a;
+}
+
+.admin-form input,
+.admin-form select,
+.admin-form textarea {
+  padding: 0.6rem 0.8rem;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+  font-size: 0.88rem;
+  font-family: inherit;
+}
+
+.admin-form textarea {
+  resize: vertical;
+  min-height: 60px;
+}
+
+.admin-form-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.admin-form-actions button {
+  padding: 0.55rem 1rem;
+  border-radius: 6px;
+  border: none;
+  background: #8b0000;
+  color: #fff;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.admin-form-actions button[type="button"] {
+  background: #eee;
+  color: #333;
+}
+
+.field-error {
+  color: #c0392b;
+  font-size: 0.82rem;
+  margin: 0;
+}
+
+.admin-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.admin-list-item {
+  background: #fff;
+  border: 1px solid #eee;
+  border-radius: 8px;
+  padding: 0.8rem 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.88rem;
+}
+
+.admin-list-actions {
+  display: flex;
+  gap: 0.4rem;
+}
+
+.admin-list-actions button {
+  padding: 0.35rem 0.7rem;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+  background: #fff;
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+
+.admin-list-actions button.danger {
+  border-color: #e0a0a0;
+  color: #c0392b;
+}
+
+@media (max-width: 700px) {
+  .admin-section {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,26 @@
+.wishlist-heart {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  background: rgba(255, 255, 255, 0.9);
+  border: none;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  font-size: 1.15rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #8b0000;
+  transition: transform 0.15s ease;
+  z-index: 2;
+}
+
+.wishlist-heart:hover {
+  transform: scale(1.1);
+}
+
+.wishlist-heart.active {
+  color: #d10000;
+}

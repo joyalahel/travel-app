@@ -185,7 +185,21 @@
   align-items: center;
   z-index: 2;
 }
+.signin-btn {
+  background: none;
+  border: 1px solid #fff;
+  color: #fff;
+  padding: 0.45rem 1rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+}
 
+.signin-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
 .logo-img {
   height: 72px;
   width: auto;

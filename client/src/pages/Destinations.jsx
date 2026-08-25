@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { getDestinations } from '../api/api';
+import WishlistHeart from '../components/WishlistHeart';
 import './Destinations.css';
+
 
 function Destinations() {
   const [destinations, setDestinations] = useState([]);
@@ -37,23 +39,24 @@ function Destinations() {
       </div>
 
       <div className="destinations-grid">
-        {destinations.map((dest) => (
-          <div key={dest._id} className="destination-card">
-            <img src={dest.image} alt={dest.name} />
-            <div className="destination-card-body">
-              <h3>{dest.name}</h3>
-              <p className="destination-card-location">{dest.city}, {dest.country}</p>
-              <p className="description">{dest.description}</p>
-              {dest.tags && dest.tags.length > 0 && (
-                <div className="destination-tags">
-                  {dest.tags.map((tag) => (
-                    <span key={tag} className="tag">{tag}</span>
-                  ))}
-                </div>
-              )}
-            </div>
-          </div>
-        ))}
+{destinations.map((dest) => (
+  <div key={dest._id} className="destination-card" style={{ position: 'relative' }}>
+    <WishlistHeart type="destination" id={dest._id} data={dest} />
+    <img src={dest.image} alt={dest.name} />
+    <div className="destination-card-body">
+      <h3>{dest.name}</h3>
+      <p className="destination-card-location">{dest.city}, {dest.country}</p>
+      <p className="description">{dest.description}</p>
+      {dest.tags && dest.tags.length > 0 && (
+        <div className="destination-tags">
+          {dest.tags.map((tag) => (
+            <span key={tag} className="tag">{tag}</span>
+          ))}
+        </div>
+      )}
+    </div>
+  </div>
+))}
       </div>
     </div>
   );

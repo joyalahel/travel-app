@@ -1,0 +1,119 @@
+.contact-page {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 3rem 1.5rem;
+}
+
+.contact-header {
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.contact-header h1 {
+  font-size: 2rem;
+  font-weight: 600;
+  margin: 0 0 0.5rem;
+  color: #1a1a1a;
+}
+
+.contact-header p {
+  color: #666;
+  margin: 0;
+}
+
+.contact-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.form-group label {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #1a1a1a;
+}
+
+.form-group input,
+.form-group textarea {
+  padding: 0.7rem 0.9rem;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  font-size: 0.95rem;
+  font-family: inherit;
+  resize: vertical;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: #8b0000;
+}
+
+.field-error {
+  margin: 0;
+  font-size: 0.8rem;
+  color: #c0392b;
+}
+
+.submit-btn {
+  background: #8b0000;
+  color: #fff;
+  border: none;
+  padding: 0.85rem 1.5rem;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.submit-btn:hover {
+  background: #6e0000;
+}
+
+.contact-success {
+  text-align: center;
+  padding: 3rem 1.5rem;
+}
+
+.contact-success h1 {
+  font-size: 1.8rem;
+  margin: 0 0 0.75rem;
+  color: #1a1a1a;
+}
+
+.contact-success p {
+  color: #666;
+  margin: 0 0 1.5rem;
+}
+
+.contact-success button {
+  background: none;
+  border: 1px solid #8b0000;
+  color: #8b0000;
+  padding: 0.6rem 1.2rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.contact-success button:hover {
+  background: #fdf0f0;
+}
+
+@media (max-width: 480px) {
+  .contact-page {
+    padding: 2rem 1rem;
+  }
+
+  .contact-header h1 {
+    font-size: 1.5rem;
+  }
+}
