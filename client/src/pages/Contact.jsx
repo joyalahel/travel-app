@@ -16,7 +16,7 @@ function Contact() {
     if (!form.name.trim()) newErrors.name = 'Name is required';
     if (!form.email.trim()) {
       newErrors.email = 'Email is required';
-    } else if (!/\S+@\S+\.\S+/.test(form.email)) {
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
       newErrors.email = 'Enter a valid email';
     }
     if (!form.message.trim()) newErrors.message = 'Message is required';
@@ -41,7 +41,7 @@ function Contact() {
         <div className="contact-success">
           <h1>Message sent</h1>
           <p>Thanks for reaching out — we'll get back to you soon.</p>
-          <button type ="button" onClick={() => setSubmitted(false)}>Send another message</button>
+          <button type="button" onClick={() => setSubmitted(false)}>Send another message</button>
         </div>
       </div>
     );

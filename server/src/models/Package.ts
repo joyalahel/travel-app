@@ -10,7 +10,7 @@ export interface IPackage extends Document {
 const packageSchema = new Schema<IPackage>({
   destination: {
     type: Schema.Types.ObjectId,
-    ref: 'Destination',
+    ref: 'Destination', //pop
     required: true
   },
   stars: {

@@ -98,3 +98,7 @@
   color: #666;
   font-size: 1rem;
 }
+.destination-card-link {
+  text-decoration: none;
+  color: inherit;
+}

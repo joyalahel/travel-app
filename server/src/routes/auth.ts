@@ -17,7 +17,7 @@ router.post('/signup', async (req: Request, res: Response) => {
       return res.status(400).json({ error: 'Email already in use' });
     }
 
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const hashedPassword = await bcrypt.hash(password, 10); //cost factor
 
     const newUser = new User({ name, email, password: hashedPassword });
     await newUser.save();
@@ -71,7 +71,7 @@ res.json({
 // get admin only /api/auth/users
 router.get('/users', authMiddleware, adminOnly, async (req: AuthRequest, res: Response) => {
   try {
-    const users = await User.find().select('-password');
+    const users = await User.find().select('-password'); 
     res.json(users);
   } catch (err) {
     const message = err instanceof Error ? err.message : 'Unknown error';

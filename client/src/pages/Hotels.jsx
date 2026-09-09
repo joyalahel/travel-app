@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { getHotels } from '../api/api';
 import WishlistHeart from '../components/WishlistHeart';
 import './Hotels.css';
@@ -84,26 +85,28 @@ function Hotels() {
           return (
             <div key={hotel._id} className="hotel-card">
               <WishlistHeart type="hotel" id={hotel._id} data={hotel} />
-              {hotel.image && <img src={hotel.image} alt={hotel.name} />}
-              <div className="hotel-card-body">
-                <h3>{hotel.name}</h3>
-                {dest && (
-                  <p className="hotel-location">{dest.city}, {dest.country}</p>
-                )}
-                {hotel.description && (
-                  <p className="hotel-description">{hotel.description}</p>
-                )}
+              <Link to={`/hotels/${hotel._id}`} className="hotel-card-link">
+                {hotel.image && <img src={hotel.image} alt={hotel.name} />}
+                <div className="hotel-card-body">
+                  <h3>{hotel.name}</h3>
+                  {dest && (
+                    <p className="hotel-location">{dest.city}, {dest.country}</p>
+                  )}
+                  {hotel.description && (
+                    <p className="hotel-description">{hotel.description}</p>
+                  )}
 
-                {pkg && (
-                  <div className="hotel-package-info">
-                    <span className="stars">{'★'.repeat(pkg.stars)}</span>
-                    <span className="room-type">{pkg.roomType}</span>
-                    <span className="nights">{pkg.nights} nights</span>
-                  </div>
-                )}
+                  {pkg && (
+                    <div className="hotel-package-info">
+                      <span className="stars">{'★'.repeat(pkg.stars)}</span>
+                      <span className="room-type">{pkg.roomType}</span>
+                      <span className="nights">{pkg.nights} nights</span>
+                    </div>
+                  )}
 
-                <p className="hotel-price">${hotel.pricePerNight}<span> / night</span></p>
-              </div>
+                  <p className="hotel-price">${hotel.pricePerNight}<span> / night</span></p>
+                </div>
+              </Link>
             </div>
           );
         })}

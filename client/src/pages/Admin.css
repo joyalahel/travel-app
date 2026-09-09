@@ -139,3 +139,42 @@
     grid-template-columns: 1fr;
   }
 }
+.admin-subheading {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin-top: 0.5rem;
+}
+
+.activity-row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.75rem;
+}
+
+.activity-row input {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.remove-row-btn {
+  justify-self: start;
+  background: #fff;
+  border: 1px solid #e0a0a0;
+  color: #c0392b;
+  border-radius: 6px;
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.add-row-btn {
+  background: #f1f0e8;
+  border: 1px dashed #ccc;
+  border-radius: 6px;
+  padding: 0.5rem;
+  font-size: 0.82rem;
+  cursor: pointer;
+  color: #666;
+}

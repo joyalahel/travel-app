@@ -8,7 +8,8 @@ const router = express.Router();
 router.get('/', async (req: Request, res: Response) => {
   try {
     const filter: Record<string, string> = {};
-    if (req.query.package) filter.package = req.query.package as string;
+    if (req.query.package) 
+      filter.package = req.query.package as string;
 
     const hotels = await Hotel.find(filter).populate({
       path: 'package',

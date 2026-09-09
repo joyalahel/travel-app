@@ -6,18 +6,20 @@ export interface IHotel extends Document {
   pricePerNight: number;
   image?: string;
   description?: string;
+  amenities: string[];
 }
 
 const hotelSchema = new Schema<IHotel>({
   package: {
     type: Schema.Types.ObjectId,
-    ref: 'Package',
+    ref: 'Package', //pop
     required: true
   },
   name: { type: String, required: true },
   pricePerNight: { type: Number, required: true },
   image: String,
-  description: String
+  description: String,
+  amenities: [String]
 }, { timestamps: true });
 
 export default mongoose.model<IHotel>('Hotel', hotelSchema);

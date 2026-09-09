@@ -147,3 +147,32 @@ export async function deleteHotel(id, token) {
   if (!res.ok) throw new Error(result.error || 'Failed to delete hotel');
   return result;
 }
+
+export async function checkout(items, token) {
+  const res = await fetch(`${BASE_URL}/orders/checkout`, {
+    method: 'POST',
+    headers: authHeaders(token),
+    body: JSON.stringify({items})
+  });
+    const result = await res.json();
+    if (!res.ok) throw new Error(result.error || "Cehckout Failed");
+    return result;
+}
+
+export async function getOrders(token) {
+  const res = await fetch (`${BASE_URL}/orders`,{
+    headers: authHeaders(token)
+  });
+  const result = await res.json();
+  if (!res.ok) throw new Error(result.error || "Failed to fetch orders");
+  return result;
+}
+
+export async function getOrder(id, token) {
+  const res = await fetch(`${BASE_URL}/orders/${id}`, {
+    headers: authHeaders(token),
+  });
+  const result = await res.json();
+  if (!res.ok) throw new Error(result.error || 'Failed to fetch order');
+  return result;
+}

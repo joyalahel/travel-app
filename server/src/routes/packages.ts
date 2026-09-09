@@ -20,6 +20,7 @@ router.get('/', async (req: Request, res: Response) => {
   }
 });
 
+
 // post /api/packages
 router.post('/', authMiddleware, adminOnly, async (req: Request, res: Response) => {
   try {

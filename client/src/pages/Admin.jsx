@@ -1,5 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
+import { useToast } from '../context/ToastContext';
+import ConfirmDialog from '../components/ConfirmDialog';
+import Rating from '@mui/material/Rating';
 import {
   getDestinations, createDestination, updateDestination, deleteDestination,
   getPackages, createPackage, updatePackage, deletePackage,
@@ -33,9 +36,15 @@ function Admin() {
 
 // ---------- Destinations ----------
 function DestinationsAdmin({ token }) {
+  const { showToast } = useToast();
   const [items, setItems] = useState([]);
   const [editing, setEditing] = useState(null);
-  const [form, setForm] = useState({ name: '', country: '', city: '', description: '', tags: '', image: '' });
+  const [deleteTarget, setDeleteTarget] = useState(null);
+  const [form, setForm] = useState({
+    name: '', country: '', city: '', description: '', tagline: '', bestSeason: '',
+    tags: '', image: '',
+  });
+  const [activityRows, setActivityRows] = useState([{ name: '', image: '' }]);
   const [error, setError] = useState('');
 
   function load() {
@@ -48,39 +57,67 @@ function DestinationsAdmin({ token }) {
     setEditing(item._id);
     setForm({
       name: item.name, country: item.country, city: item.city,
-      description: item.description || '', tags: (item.tags || []).join(', '), image: item.image || '',
+      description: item.description || '', tagline: item.tagline || '', bestSeason: item.bestSeason || '',
+      tags: (item.tags || []).join(', '), image: item.image || '',
     });
+    setActivityRows(
+      item.activities && item.activities.length > 0
+        ? item.activities.map((a) => ({ name: a.name || '', image: a.image || '' }))
+        : [{ name: '', image: '' }]
+    );
   }
 
   function resetForm() {
     setEditing(null);
-    setForm({ name: '', country: '', city: '', description: '', tags: '', image: '' });
+    setForm({ name: '', country: '', city: '', description: '', tagline: '', bestSeason: '', tags: '', image: '' });
+    setActivityRows([{ name: '', image: '' }]);
+  }
+
+  function updateActivityRow(index, field, value) {
+    setActivityRows((rows) => rows.map((row, i) => (i === index ? { ...row, [field]: value } : row)));
+  }
+
+  function addActivityRow() {
+    setActivityRows((rows) => [...rows, { name: '', image: '' }]);
+  }
+
+  function removeActivityRow(index) {
+    setActivityRows((rows) => rows.filter((_, i) => i !== index));
   }
 
   async function handleSubmit(e) {
     e.preventDefault();
     setError('');
-    const payload = { ...form, tags: form.tags.split(',').map((t) => t.trim()).filter(Boolean) };
+    const payload = {
+      ...form,
+      tags: form.tags.split(',').map((t) => t.trim()).filter(Boolean),
+      activities: activityRows.filter((row) => row.name.trim()),
+    };
     try {
       if (editing) {
         await updateDestination(editing, payload, token);
+        showToast('Destination updated!');
       } else {
         await createDestination(payload, token);
+        showToast('Destination added!');
       }
       resetForm();
       load();
     } catch (err) {
       setError(err.message);
+      showToast(err.message, 'error');
     }
   }
 
-  async function handleDelete(id) {
-    if (!confirm('Delete this destination?')) return;
+  async function confirmDelete() {
     try {
-      await deleteDestination(id, token);
+      await deleteDestination(deleteTarget, token);
+      showToast('Destination deleted');
       load();
     } catch (err) {
-      setError(err.message);
+      showToast(err.message, 'error');
+    } finally {
+      setDeleteTarget(null);
     }
   }
 
@@ -91,9 +128,30 @@ function DestinationsAdmin({ token }) {
         <input placeholder="Name" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} required />
         <input placeholder="Country" value={form.country} onChange={(e) => setForm({ ...form, country: e.target.value })} required />
         <input placeholder="City" value={form.city} onChange={(e) => setForm({ ...form, city: e.target.value })} required />
+        <input placeholder="Tagline (short, punchy)" value={form.tagline} onChange={(e) => setForm({ ...form, tagline: e.target.value })} />
         <textarea placeholder="Description" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} />
+        <input placeholder="Best time to visit (e.g. April – June)" value={form.bestSeason} onChange={(e) => setForm({ ...form, bestSeason: e.target.value })} />
         <input placeholder="Tags (comma separated)" value={form.tags} onChange={(e) => setForm({ ...form, tags: e.target.value })} />
         <input placeholder="Image URL" value={form.image} onChange={(e) => setForm({ ...form, image: e.target.value })} />
+
+        <label className="admin-subheading">Activities</label>
+        {activityRows.map((row, i) => (
+          <div key={i} className="activity-row">
+            <input
+              placeholder="Activity name"
+              value={row.name}
+              onChange={(e) => updateActivityRow(i, 'name', e.target.value)}
+            />
+            <input
+              placeholder="Activity image URL"
+              value={row.image}
+              onChange={(e) => updateActivityRow(i, 'image', e.target.value)}
+            />
+            <button type="button" onClick={() => removeActivityRow(i)} className="remove-row-btn">✕</button>
+          </div>
+        ))}
+        <button type="button" onClick={addActivityRow} className="add-row-btn">+ Add activity</button>
+
         {error && <p className="field-error">{error}</p>}
         <div className="admin-form-actions">
           <button type="submit">{editing ? 'Save changes' : 'Add destination'}</button>
@@ -109,20 +167,29 @@ function DestinationsAdmin({ token }) {
             </div>
             <div className="admin-list-actions">
               <button type="button" onClick={() => startEdit(item)}>Edit</button>
-              <button type="button" onClick={() => handleDelete(item._id)} className="danger">Delete</button>
+              <button type="button" onClick={() => setDeleteTarget(item._id)} className="danger">Delete</button>
             </div>
           </div>
         ))}
       </div>
+
+      <ConfirmDialog
+        open={!!deleteTarget}
+        title="Delete this destination?"
+        onConfirm={confirmDelete}
+        onCancel={() => setDeleteTarget(null)}
+      />
     </div>
   );
 }
 
 // ---------- Packages ----------
 function PackagesAdmin({ token }) {
+  const { showToast } = useToast();
   const [items, setItems] = useState([]);
   const [destinations, setDestinations] = useState([]);
   const [editing, setEditing] = useState(null);
+  const [deleteTarget, setDeleteTarget] = useState(null);
   const [form, setForm] = useState({ destination: '', stars: 3, roomType: 'standard', nights: 3 });
   const [error, setError] = useState('');
 
@@ -152,23 +219,28 @@ function PackagesAdmin({ token }) {
     try {
       if (editing) {
         await updatePackage(editing, payload, token);
+        showToast('Package updated!');
       } else {
         await createPackage(payload, token);
+        showToast('Package added!');
       }
       resetForm();
       load();
     } catch (err) {
       setError(err.message);
+      showToast(err.message, 'error');
     }
   }
 
-  async function handleDelete(id) {
-    if (!confirm('Delete this package?')) return;
+  async function confirmDelete() {
     try {
-      await deletePackage(id, token);
+      await deletePackage(deleteTarget, token);
+      showToast('Package deleted');
       load();
     } catch (err) {
-      setError(err.message);
+      showToast(err.message, 'error');
+    } finally {
+      setDeleteTarget(null);
     }
   }
 
@@ -204,25 +276,36 @@ function PackagesAdmin({ token }) {
         {items.map((item) => (
           <div key={item._id} className="admin-list-item">
             <div>
-              <strong>{item.destination?.name || 'Unknown'}</strong> — {item.stars}★ {item.roomType}, {item.nights} nights
+              <strong>{item.destination?.name || 'Unknown'}</strong>
+              <Rating value={item.stars} readOnly size="small" sx={{ verticalAlign: 'middle', mx: 0.5 }} />
+              {item.roomType}, {item.nights} nights
             </div>
             <div className="admin-list-actions">
               <button type="button" onClick={() => startEdit(item)}>Edit</button>
-              <button type="button" onClick={() => handleDelete(item._id)} className="danger">Delete</button>
+              <button type="button" onClick={() => setDeleteTarget(item._id)} className="danger">Delete</button>
             </div>
           </div>
         ))}
       </div>
+
+      <ConfirmDialog
+        open={!!deleteTarget}
+        title="Delete this package?"
+        onConfirm={confirmDelete}
+        onCancel={() => setDeleteTarget(null)}
+      />
     </div>
   );
 }
 
 // ---------- Hotels ----------
 function HotelsAdmin({ token }) {
+  const { showToast } = useToast();
   const [items, setItems] = useState([]);
   const [packages, setPackages] = useState([]);
   const [editing, setEditing] = useState(null);
-  const [form, setForm] = useState({ package: '', name: '', pricePerNight: '', description: '', image: '' });
+  const [deleteTarget, setDeleteTarget] = useState(null);
+  const [form, setForm] = useState({ package: '', name: '', pricePerNight: '', description: '', image: '', amenities: ''  });
   const [error, setError] = useState('');
 
   function load() {
@@ -236,39 +319,44 @@ function HotelsAdmin({ token }) {
     setEditing(item._id);
     setForm({
       package: item.package?._id || '', name: item.name, pricePerNight: item.pricePerNight,
-      description: item.description || '', image: item.image || '',
+      description: item.description || '', image: item.image || '', amenities: (item.amenities || []).join(', '),
     });
   }
 
   function resetForm() {
     setEditing(null);
-    setForm({ package: '', name: '', pricePerNight: '', description: '', image: '' });
+    setForm({ package: '', name: '', pricePerNight: '', description: '', image: '', amenities: '' });
   }
 
   async function handleSubmit(e) {
     e.preventDefault();
     setError('');
-    const payload = { ...form, pricePerNight: Number(form.pricePerNight) };
+    const payload = { ...form, pricePerNight: Number(form.pricePerNight), amenities: form.amenities.split(',').map((a) => a.trim()).filter(Boolean), };
     try {
       if (editing) {
         await updateHotel(editing, payload, token);
+        showToast('Hotel updated!');
       } else {
         await createHotel(payload, token);
+        showToast('Hotel added!');
       }
       resetForm();
       load();
     } catch (err) {
       setError(err.message);
+      showToast(err.message, 'error');
     }
   }
 
-  async function handleDelete(id) {
-    if (!confirm('Delete this hotel?')) return;
+  async function confirmDelete() {
     try {
-      await deleteHotel(id, token);
+      await deleteHotel(deleteTarget, token);
+      showToast('Hotel deleted');
       load();
     } catch (err) {
-      setError(err.message);
+      showToast(err.message, 'error');
+    } finally {
+      setDeleteTarget(null);
     }
   }
 
@@ -288,6 +376,7 @@ function HotelsAdmin({ token }) {
         <input type="number" min="0" placeholder="Price per night" value={form.pricePerNight} onChange={(e) => setForm({ ...form, pricePerNight: e.target.value })} required />
         <textarea placeholder="Description" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} />
         <input placeholder="Image URL" value={form.image} onChange={(e) => setForm({ ...form, image: e.target.value })} />
+        <input placeholder="Amenities (comma separated, e.g. Pool, Wifi, Gym, Spa)" value={form.amenities} onChange={(e) => setForm({ ...form, amenities: e.target.value })} />
         {error && <p className="field-error">{error}</p>}
         <div className="admin-form-actions">
           <button type="submit">{editing ? 'Save changes' : 'Add hotel'}</button>
@@ -303,11 +392,18 @@ function HotelsAdmin({ token }) {
             </div>
             <div className="admin-list-actions">
               <button type="button" onClick={() => startEdit(item)}>Edit</button>
-              <button type="button" onClick={() => handleDelete(item._id)} className="danger">Delete</button>
+              <button type="button" onClick={() => setDeleteTarget(item._id)} className="danger">Delete</button>
             </div>
           </div>
         ))}
       </div>
+
+      <ConfirmDialog
+        open={!!deleteTarget}
+        title="Delete this hotel?"
+        onConfirm={confirmDelete}
+        onCancel={() => setDeleteTarget(null)}
+      />
     </div>
   );
 }

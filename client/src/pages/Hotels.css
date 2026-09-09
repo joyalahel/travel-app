@@ -167,3 +167,8 @@
     font-size: 1.5rem;
   }
 }
+.hotel-card-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}

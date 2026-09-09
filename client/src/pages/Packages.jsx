@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { getPackages } from '../api/api';
 import WishlistHeart from '../components/WishlistHeart';
+import Rating from '@mui/material/Rating';
 import { Link } from 'react-router-dom';
 import './Packages.css';
 
@@ -79,7 +80,7 @@ function Packages() {
               </p>
 
               <div className="package-details">
-                <span className="stars">{'★'.repeat(pkg.stars)}</span>
+                <span className="stars">{<Rating value={pkg.stars} readOnly size="small" />}</span>
                 <span className="room-type">{pkg.roomType}</span>
               </div>
 

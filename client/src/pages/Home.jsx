@@ -5,11 +5,16 @@ import './Home.css';
 function Home() {
   return (
     <div className="home-page">
-      <section className="home-hero">
-        <img src={logo} alt="Beyond Borders" className="home-hero-logo" />
-        <h1>Beyond Borders</h1>
-        <p>Curated travel packages, real destinations, and an AI travel assistant to help you find your next trip.</p>
-        <Link to="/destinations" className="home-cta">Explore destinations</Link>
+      <section
+        className="home-hero"
+        style={{ backgroundImage: `url(https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1)` }}
+      >
+        <div className="home-hero-overlay">
+          <img src={logo} alt="Beyond Borders" className="home-hero-logo" />
+          <h1>Beyond Borders</h1>
+          <p>Curated travel packages, real destinations, and an AI travel assistant to help you find your next trip.</p>
+          <Link to="/destinations" className="home-cta">Explore destinations</Link>
+        </div>
       </section>
 
       <section className="home-section">
